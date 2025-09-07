@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Arrays;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -13,7 +15,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -56,11 +64,10 @@ public class MenuApp extends Application {
 
 		menuFichier.getItems().addAll(mnuItemAPropos, mnuItemQuitter);
 		return menuFichier;
-
 	}
 
 	private Menu creerMnuEdition() {
-		Menu mnuEdition = new Menu("Edition");
+		Menu mnuEdition = new Menu("_Edition");
 		MenuItem mnuItemCopier = new MenuItem("_Copier");
 		mnuItemCopier.setMnemonicParsing(true);
 		MenuItem mnuItemColler = new MenuItem("Coller");
@@ -77,13 +84,38 @@ public class MenuApp extends Application {
 		return mnuEdition;
 	}
 
+	private Menu creerMnuFormat() {
+
+		Menu mnuFormat = new Menu("Format");
+
+		Menu mnuCouleur = new Menu("Couleur de la bordure");
+		MenuItem mnuItemPolice = new MenuItem("Police");
+
+		ToggleGroup toggleGroup = new ToggleGroup();
+
+		GestionStyle gestionStyle = new GestionStyle();
+
+		for (int i = 0; i < couleurs.length; i++) {
+
+			RadioMenuItem radioMnuItem = new RadioMenuItem(couleurs[i]);
+			radioMnuItem.setToggleGroup(toggleGroup);
+			radioMnuItem.setOnAction(gestionStyle);
+			mnuCouleur.getItems().add(radioMnuItem);
+		}
+
+		mnuFormat.getItems().add(mnuCouleur);
+
+		return mnuFormat;
+
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
 
 			MenuBar barreMenu = new MenuBar();
-			barreMenu.getMenus().addAll(creerMnuFichier(), creerMnuEdition());
+			barreMenu.getMenus().addAll(creerMnuFichier(), creerMnuEdition(), creerMnuFormat());
 			root.setTop(barreMenu);
 
 			txtContenu = new TextArea();
@@ -128,7 +160,12 @@ public class MenuApp extends Application {
 
 		@Override
 		public void handle(ActionEvent e) {
+			RadioMenuItem item = (RadioMenuItem) e.getSource();
+			String couleur = item.getText();
+			int indexCouleur = Arrays.asList(couleurs).indexOf(couleur);
 
+			txtContenu.setBorder(new Border(new BorderStroke(valeursCouleurs[indexCouleur], BorderStrokeStyle.SOLID,
+					CornerRadii.EMPTY, new BorderWidths(10))));
 		}
 	}
 
