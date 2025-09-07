@@ -1,7 +1,12 @@
 package application;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -29,6 +34,26 @@ public class MenuApp extends Application {
 			Menu menuFichier = new Menu("_Fichier");
 			MenuItem mnuItemAPropos = new MenuItem("À propose de ...");
 			MenuItem mnuItemQuitter = new MenuItem("Quitter");
+			
+			mnuItemQuitter.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent e) {
+					Platform.exit();	
+				}
+			});
+			
+			mnuItemAPropos.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent e) {
+					Alert alertInfo = new Alert(AlertType.INFORMATION);
+					alertInfo.setTitle("Message");
+					alertInfo.setHeaderText(null);
+					alertInfo.setContentText("Ceci est un exemple d’utilisation des menus");
+					alertInfo.showAndWait();
+				}
+			});
 
 			menuFichier.getItems().addAll(mnuItemAPropos, mnuItemQuitter);
 			
@@ -43,7 +68,22 @@ public class MenuApp extends Application {
 			e.printStackTrace();
 		}
 	}
+	
+	class GestionEdition implements EventHandler<ActionEvent>{
 
+		@Override
+		public void handle(ActionEvent e) {
+			
+		}	
+	}
+
+	class GestionStyle implements EventHandler<ActionEvent>{
+
+		@Override
+		public void handle(ActionEvent e) {
+			
+		}	
+	}
 	public static void main(String[] args) {
 		launch(args);
 	}
